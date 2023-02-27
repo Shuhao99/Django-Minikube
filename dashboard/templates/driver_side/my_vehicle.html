@@ -1,0 +1,81 @@
+{% extends 'dashboard/homepage.html' %}
+{% load static %}
+{% block content %}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+
+      <span class="fs-4">Uber for Driver</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="{% url 'tasks'%}" class="nav-link text-white" aria-current="page">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          My Tasks
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'search tasks'%}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+          Search Open Ride
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'my vehicle'%}" class="nav-link active">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+          My Vehicle
+        </a>
+      </li>
+
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+        <strong>{{user.username}}</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+<!--        <li><a class="dropdown-item" href="#">New project...</a></li>-->
+<!--        <li><a class="dropdown-item" href="#">Settings</a></li>-->
+        <li><a class="dropdown-item" href="{% url 'started_ride' %}">Switch to User Portal</a></li>
+<!--        <li><hr class="dropdown-divider"></li>-->
+        <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'login' %}">Sign out</a></li>
+      </ul>
+    </div>
+  </div>
+
+<div class="container" style="padding: 3%">
+    <div class="row align-items-center">
+        <div class="col-1"></div>
+    <div class="col-9">
+            <div class="h-100 p-5 bg-light border rounded-3">
+            <h3>My Vehicle </h3>
+            <br>
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="fs-5">Type: </strong>
+              <small class="text-muted fs-5">{{vehicle.get_type}}</small>
+
+              <strong class="fs-5">Plate Number: </strong>
+              <small class="text-muted fs-5">{{vehicle.plateNumber}}</small>
+
+            </div>
+            <br>
+            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+
+            <a class="btn btn-secondary" role="button" href="{% url 'edit vehicle' %}">
+                Edit Vehicle Info
+            </a>
+
+            <a class="btn btn-danger" role="button" href="{% url 'delete account' %}">
+                Delete Driver Account
+            </a>
+
+            </div>
+
+          </div>
+    </div>
+</div>
+</div>
+{% endblock %}

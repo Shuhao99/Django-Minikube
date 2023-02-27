@@ -1,0 +1,201 @@
+{% extends 'dashboard/homepage.html' %}
+{% load static %}
+{% block content %}
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+
+      <span class="fs-4">Uber</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="{% url 'started_ride'%}" class="nav-link text-white" aria-current="page">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
+          Started Rides
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'shared rides' %}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
+          Shared Rides
+        </a>
+      </li>
+        <li>
+        <a href="{% url 'require ride'%}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+          Require Ride
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'search rides'%}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          Search Open Rides
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'profile'%}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+          My Profile
+        </a>
+      </li>
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+        <strong>{{user.username}}</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+<!--        <li><a class="dropdown-item" href="#">New project...</a></li>-->
+<!--        <li><a class="dropdown-item" href="#">Settings</a></li>-->
+        <li><a class="dropdown-item" href="{% url 'switch to driver' %}">Switch to Driver Portal</a></li>
+<!--        <li><hr class="dropdown-divider"></li>-->
+        <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'login' %}">Sign out</a></li>
+      </ul>
+    </div>
+  </div>
+
+<div class="container" style="padding: 2% 2% 2% 5%">
+    <div class="row align-items-center">
+        <div class="col-1"></div>
+    <div class="col-9">
+            <div class="h-100 p-5 bg-light border rounded-3">
+            <h3>Ride details</h3>
+            <br>
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Destination: </strong>
+              <small class="text-muted">{{dest}}</small>
+              <strong class="mb-1">Arrive time: </strong>
+              <small class="text-muted">{{arrive_time}}</small>
+              <strong class="mb-1">Status: </strong>
+              <small class="text-muted">{{status}}</small>
+            </div>
+            <br>
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Vehicle type required: </strong>
+              <small class="text-muted">{{v_type}}</small>
+              <strong class="mb-1">Driver: </strong>
+              <small class="text-muted">{{driver_name}}</small>
+              <strong class="mb-1">Plate: </strong>
+              <small class="text-muted">{{ plate }}</small>
+
+            </div>
+            <br>
+            <div class="d-flex w-100 align-items-center justify-content-between">
+              <strong class="mb-1">Driver Phone: </strong>
+              <small class="text-muted">{{ driver_phone }}</small>
+              <strong class="mb-1">Driver Email: </strong>
+              <small class="text-muted">{{ driver_Email }}</small>
+                {% if driver %}
+                    <strong class="mb-1">Car type: </strong>
+                    <small class="text-muted">{{ driver.vehicle.get_type }}</small>
+                    {% else %}
+                    <strong class="mb-1">Car type: </strong>
+                    <small class="text-muted">Unknown</small>
+                {% endif %}
+
+
+            </div>
+            <br>
+            <div class="d-flex justify-content-between align-items-center">
+              <strong class="mb-1">Shared by: </strong>
+            </div>
+
+
+              <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+              {% for group in shared_by %}
+                  {%  if ride.owner == group.user %}
+                     <div class="col">
+                  <div class="card shadow-sm">
+                    <div class="card-body">
+                         (Owner)
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Name:</strong>
+                            <small class="text-muted">{{group.user.first_name}} {{group.user.last_name}}</small>
+
+                          </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Passenger Number:</strong>
+                            <small class="text-muted">{{ group.groupNum }}</small>
+                          </div>
+                       <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Gender:</strong>
+                            <small class="text-muted">{{ group.user.profile.get_gender }}</small>
+                          </div>
+
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Phone:</strong>
+                            <small class="text-muted">{{group.user.profile.mobile}}</small>
+                          </div>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Email:</strong>
+                            <small class="text-muted">{{group.user.email}}</small>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+                  {% else %}
+                <div class="col">
+                  <div class="card shadow-sm">
+                    <div class="card-body">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Name:</strong>
+                            <small class="text-muted">{{group.user.first_name}} {{group.user.last_name}}</small>
+
+                          </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Passenger Number:</strong>
+                            <small class="text-muted">{{ group.groupNum }}</small>
+                          </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Gender:</strong>
+                            <small class="text-muted">{{ group.user.profile.get_gender }}</small>
+                          </div>
+
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Phone:</strong>
+                            <small class="text-muted">{{group.user.profile.mobile}}</small>
+                          </div>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <strong class="mb-1">Email:</strong>
+                            <small class="text-muted">{{group.user.email}}</small>
+                          </div>
+                    </div>
+                  </div>
+                </div>
+                  {% endif %}
+            {% endfor %}
+          </div>
+
+
+            <div class="d-grid gap-3 d-md-flex justify-content-md-end">
+            {% if status == "Open" %}
+                {% if curr_user == owner %}
+                <a class="btn btn-primary me-md-2" role="button" href="{% url 'edit ride' pk=ride.pk %}">
+                    Edit
+                </a>
+                <a class="btn btn-danger" role="button" href="{% url 'cancel ride' pk=ride.pk %}">
+                    Cancel
+                </a>
+                {% elif curr_user != driver %}
+                <a class="btn btn-danger" role="button" href="{% url 'quit ride' pk=ride.pk %}">
+                    Quit </a>
+                {% endif %}
+
+            {% elif status == "Confirmed" %}
+                {% if curr_user == driver%}
+                    <a class="btn btn-primary" role="button" href="{% url 'complete task' pk=ride.pk %}">
+                    Complete </a>
+                {% endif %}
+            {% endif %}
+
+            </div>
+
+          </div>
+    </div>
+</div>
+</div>
+
+{%  endblock %}

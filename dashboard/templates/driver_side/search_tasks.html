@@ -1,0 +1,115 @@
+{% extends 'dashboard/homepage.html' %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+
+<div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 280px;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+
+      <span class="fs-4">Uber for Driver</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+      <li class="nav-item">
+        <a href="{% url 'tasks'%}" class="nav-link text-white" aria-current="page">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          My Tasks
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'search tasks'%}" class="nav-link active">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
+          Search Open Ride
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'my vehicle'%}" class="nav-link text-white">
+          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
+          My Vehicle
+        </a>
+      </li>
+
+    </ul>
+    <hr>
+    <div class="dropdown">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2">
+        <strong>{{user.username}}</strong>
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+<!--        <li><a class="dropdown-item" href="#">New project...</a></li>-->
+<!--        <li><a class="dropdown-item" href="#">Settings</a></li>-->
+        <li><a class="dropdown-item" href="{% url 'started_ride' %}">Switch to User Portal</a></li>
+<!--        <li><hr class="dropdown-divider"></li>-->
+        <li><a class="dropdown-item" href="{% url 'logout' %}?next={% url 'login' %}">Sign out</a></li>
+      </ul>
+    </div>
+  </div>
+
+<div class="container" style="padding: 2%">
+    <div class="row align-items-md-stretch">
+      <div class="col-md-15">
+        <div class="h-130 p-5 bg-light border rounded-3">
+          <h2>Search for open rides: </h2>
+            <br>
+          <form method="POST" class="row g-2"> {% csrf_token %}
+
+              <div class="col-md-12">
+                <label for="{{ form.address.id_for_label }} ">Destination keywords: </label>
+                  {{ form.address }}
+              </div>
+
+                <label for="{{ form.start.id_for_label }}">Choose your searching window: </label>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">start</span>
+                    {{ form.start }}
+{#                  <input name="start" type="datetime-local" class="form-control" placeholder="" id="time_window">#}
+                  <span class="input-group-text">end</span>
+                    {{ form.end }}
+{#                  <input name="end" type="datetime-local" class="form-control" placeholder="">#}
+                </div>
+
+              <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <small class="text-danger-emphasis">{{ msg }}</small> &emsp; &emsp;
+                  <button class="btn btn-primary " type="submit"> Search </button>
+              </div>
+          </form>
+
+            <div class="table-wrapper table-responsive">
+            <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">order#</th>
+      <th scope="col">Destination</th>
+      <th scope="col">Arrive Time</th>
+      <th scope="col">Passenger Number</th>
+        <th scope="col">Vehicle Type</th>
+         <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for ride in rides%}
+    <tr>
+      <th scope="row">{{ ride.pk }}</th>
+      <td>{{ ride.dest }}</td>
+      <td>{{ ride.arrive_time }}</td>
+      <td>{{ ride.get_passenger_num }}</td>
+        <td>{{ ride.get_v_type }}</td>
+        <td><a class="btn btn-success btn-sm" role="button" href="{% url 'task confirm' pk=ride.pk %}">Take Order</a></td>
+    </tr>
+{% endfor %}
+  </tbody>
+</table>
+    </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endblock %}
